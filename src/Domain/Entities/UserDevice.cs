@@ -2,7 +2,7 @@ using Domain.Common;
 
 namespace Domain.Entities;
 
-public class UserDevice : BaseEntity
+public sealed class UserDevice : BaseEntity
 {
     public required string DeviceId { get; set; }
     public string? DeviceName { get; set; }

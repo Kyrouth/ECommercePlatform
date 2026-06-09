@@ -1,5 +1,4 @@
 using Application.Common.Messaging;
-using Domain.Common;
 
 namespace Application.Users.Login;
 

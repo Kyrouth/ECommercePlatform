@@ -4,7 +4,7 @@ using Domain.Errors;
 
 namespace Domain.ValueObjects;
 
-public class PhoneNumber : ValueObject
+public sealed class PhoneNumber : ValueObject
 {
     public const int CharacterLength = 11;
     public const string Pattern = @"^09\d{9}$";

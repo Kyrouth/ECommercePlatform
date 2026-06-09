@@ -4,7 +4,7 @@ using Domain.Errors;
 
 namespace Domain.ValueObjects;
 
-public class Username : ValueObject
+public sealed class Username : ValueObject
 {
     public const int MaxLength = 15;
     public const int MinLength = 5;

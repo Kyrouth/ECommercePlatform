@@ -4,7 +4,7 @@ using Domain.Enums;
 namespace Domain.Entities;
 
 
-public class PhoneVerificationSession : BaseEntity
+public sealed class PhoneVerificationSession : BaseEntity
 {
     public required string PhoneNumber { get; set; }
 

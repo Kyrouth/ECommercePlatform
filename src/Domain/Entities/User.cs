@@ -5,7 +5,7 @@ using Domain.ValueObjects;
 
 namespace Domain.Entities;
 
-public class User : BaseAuditableEntity
+public sealed class User : BaseAuditableEntity
 {
     private User(
         Guid id,

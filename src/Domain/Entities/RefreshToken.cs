@@ -3,7 +3,7 @@ using Domain.Common;
 namespace Domain.Entities;
 
 
-public class RefreshToken : BaseEntity
+public sealed class RefreshToken : BaseEntity
 {
     public required string HashToken { get; set; }
     public DateTime ExpiresAt { get; set; }
