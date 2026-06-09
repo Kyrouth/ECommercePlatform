@@ -1,4 +1,5 @@
 using Application;
+using Scalar.AspNetCore;
 using Serilog;
 using WebApi.Extensions;
 
@@ -18,6 +19,13 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference(options =>
+    {
+        options.WithTitle("ECommerce API")
+            .ShowOperationId()
+            .SortTagsAlphabetically()
+            .SortOperationsByMethod();
+    });
 }
 
 app.UseSerilogRequestLogging();
