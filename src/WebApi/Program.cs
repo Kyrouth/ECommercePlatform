@@ -1,5 +1,6 @@
 using Application;
 using Serilog;
+using WebApi.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +11,6 @@ builder.Host.UseSerilog((context, configuration) =>
     configuration.ReadFrom.Configuration(context.Configuration);
 });
 
-builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
@@ -26,6 +26,6 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-app.MapControllers();
+app.MapEndpoints();
 
 app.Run();

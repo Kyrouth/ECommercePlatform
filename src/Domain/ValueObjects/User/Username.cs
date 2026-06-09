@@ -26,12 +26,12 @@ public class Username : ValueObject
 
         if(username.Length < MinLength || username.Length > MaxLength)
         {
-            return UserErrors.Username.UserNameMinAndMaxLengthError;
+            return UserErrors.Username.MinAndMaxLengthError;
         }
 
         if (!Regex.IsMatch(username, Pattern))
         {
-            return UserErrors.Username.UserNameComplexityError;
+            return UserErrors.Username.ComplexityError;
         }
 
 

@@ -12,7 +12,7 @@ public class User : BaseAuditableEntity
         string firstName,
         string lastName,
         Username username,
-        string hashPassword,
+        PhoneNumber phoneNumber,
         UserState state,
         Guid roleId
     )
@@ -21,7 +21,7 @@ public class User : BaseAuditableEntity
         FirstName = firstName;
         LastName = lastName;
         Username = username;
-        HashPassword = hashPassword;
+        PhoneNumber = phoneNumber;
         State = state;
         RoleId = roleId;
     }
@@ -31,20 +31,20 @@ public class User : BaseAuditableEntity
     public string HashPassword { get; private set; }
     public UserState State { get; private set; }
     public Guid RoleId { get; private set; }
+    public PhoneNumber PhoneNumber { get; set; }
 
 
     public static Result<User> Create(
         string firstName,
         string lastName,
         Username username,
-        string hashPassword,
+        PhoneNumber phoneNumber,
         Guid roleId
     )
     {
         if(
             string.IsNullOrWhiteSpace(firstName) ||
-            string.IsNullOrWhiteSpace(lastName) ||
-            string.IsNullOrWhiteSpace(hashPassword)
+            string.IsNullOrWhiteSpace(lastName)
         )
         {
             return Result.Failure<User>(Error.NullValue);
@@ -59,44 +59,10 @@ public class User : BaseAuditableEntity
         {
             return UserErrors.LastNameMaxLengthError;
         }
-
         
         
 
-        return new User(Guid.NewGuid(), firstName, lastName, username, hashPassword,  UserState.Active, roleId);
-    }
-
-    public Result<User> Update(
-        string firstName,
-        string lastName,
-        Username username,
-        string hashPassword,
-        Guid roleId
-    )
-    {
-        if(
-            string.IsNullOrWhiteSpace(firstName) ||
-            string.IsNullOrWhiteSpace(lastName) ||
-            string.IsNullOrWhiteSpace(hashPassword)
-        )
-        {
-            return Result.Failure<User>(Error.NullValue);
-        }
-
-        if(firstName.Length > 50)
-        {
-            return UserErrors.FirstNameMaxLengthError;
-        }
-
-        if(lastName.Length > 50)
-        {
-            return UserErrors.LastNameMaxLengthError;
-        }
-
-
-        
-
-        return new User(Guid.NewGuid(), firstName, lastName, username, hashPassword,  UserState.Active, roleId);
+        return new User(Guid.NewGuid(), firstName, lastName, username, phoneNumber,  UserState.Active, roleId);
     }
 
 
