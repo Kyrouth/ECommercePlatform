@@ -1,3 +1,3 @@
 namespace Application.Users.Login;
 
-public sealed record LoginUserResponse(string jwt, string refreshToken);
+public sealed record LoginUserResponse(string token, string refreshToken);

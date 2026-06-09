@@ -5,8 +5,10 @@ namespace Application.Users.Login;
 
 public sealed class LoginUserCommandHandler : ICommandHandler<LoginUserCommand, LoginUserResponse>
 {
-    public Task<Result<LoginUserResponse>> Handle(LoginUserCommand request, CancellationToken cancellationToken)
+    public async Task<Result<LoginUserResponse>> Handle(LoginUserCommand request, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var result = new LoginUserResponse("JWT Token From Handler", "Refresh token from handler");
+        await Task.CompletedTask;
+        return Result.Success(result);
     }
 }

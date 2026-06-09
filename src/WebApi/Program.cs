@@ -1,11 +1,15 @@
 using Application;
+using Infrastructure;
+using Microsoft.AspNetCore.Mvc;
 using Scalar.AspNetCore;
 using Serilog;
+using WebApi.Exceptions;
 using WebApi.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddApplication();
+builder.Services.AddApplication()
+    .AddInfrastructure(builder.Configuration);
 
 builder.Host.UseSerilog((context, configuration) =>
 {
@@ -13,6 +17,10 @@ builder.Host.UseSerilog((context, configuration) =>
 });
 
 builder.Services.AddOpenApi();
+
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 
 var app = builder.Build();
 
@@ -28,11 +36,13 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+
 app.UseSerilogRequestLogging();
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
+// app.UseAuthorization();
+app.UseExceptionHandler();
 
 app.MapEndpoints();
 

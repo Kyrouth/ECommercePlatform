@@ -1,6 +1,6 @@
 ﻿namespace Domain.Common;
 
-public sealed record Error
+public record Error
 {
     public static readonly Error None = new(string.Empty, string.Empty, ErrorType.Failure);
     public static readonly Error NullValue = new(

@@ -7,6 +7,14 @@ namespace Domain.Entities;
 
 public sealed class User : BaseAuditableEntity
 {
+    private User()
+    {
+        FirstName = null!;
+        LastName = null!;
+        Username = null!;
+        PhoneNumber = null!;
+    }
+
     private User(
         Guid id,
         string firstName,
@@ -25,10 +33,9 @@ public sealed class User : BaseAuditableEntity
         State = state;
         RoleId = roleId;
     }
-    public string FirstName { get; private set; } 
+    public string FirstName { get; private set; }
     public string LastName { get; private set; }
     public Username Username { get; private set; }
-    public string HashPassword { get; private set; }
     public UserState State { get; private set; }
     public Guid RoleId { get; private set; }
     public PhoneNumber PhoneNumber { get; set; }
@@ -42,7 +49,7 @@ public sealed class User : BaseAuditableEntity
         Guid roleId
     )
     {
-        if(
+        if (
             string.IsNullOrWhiteSpace(firstName) ||
             string.IsNullOrWhiteSpace(lastName)
         )
@@ -50,19 +57,19 @@ public sealed class User : BaseAuditableEntity
             return Result.Failure<User>(Error.NullValue);
         }
 
-        if(firstName.Length > 50)
+        if (firstName.Length > 50)
         {
             return UserErrors.FirstNameMaxLengthError;
         }
 
-        if(lastName.Length > 50)
+        if (lastName.Length > 50)
         {
             return UserErrors.LastNameMaxLengthError;
         }
-        
-        
 
-        return new User(Guid.NewGuid(), firstName, lastName, username, phoneNumber,  UserState.Active, roleId);
+
+
+        return new User(Guid.NewGuid(), firstName, lastName, username, phoneNumber, UserState.Active, roleId);
     }
 
 
