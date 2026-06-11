@@ -7,7 +7,7 @@ public static class EndpointExtensions
 {
     public static void MapEndpoints(this WebApplication app)
     {
-        var endpointType = typeof(IEndpoint);
+        var endpointType = typeof(AEndpoint);
 
         var endpoints = Assembly
             .GetExecutingAssembly()
@@ -17,7 +17,7 @@ public static class EndpointExtensions
                 !x.IsInterface &&
                 !x.IsAbstract)
             .Select(Activator.CreateInstance)
-            .Cast<IEndpoint>();
+            .Cast<AEndpoint>();
 
         foreach (var endpoint in endpoints)
         {

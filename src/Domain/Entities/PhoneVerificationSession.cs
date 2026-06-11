@@ -1,18 +1,55 @@
 using Domain.Common;
 using Domain.Enums;
+using Domain.ValueObjects;
 
 namespace Domain.Entities;
 
 
 public sealed class PhoneVerificationSession : BaseEntity
 {
-    public required string PhoneNumber { get; set; }
+    private PhoneVerificationSession()
+    {
+        OtpHash = null!;
+        PhoneNumber = null!;
+    }
 
-    public required string OtpHash { get; set; }
+    private PhoneVerificationSession(
+        PhoneNumber phoneNumber,
+        string otpHash,
+        DateTime expiresAt,
+        OtpSessionStatus status,
+        Guid deviceId
+    )
+    {
+        PhoneNumber = phoneNumber;
+        OtpHash = otpHash;
+        ExpiresAt = expiresAt;
+        Status = status;
+        DeviceId = deviceId;
+    }
 
-    public DateTime ExpiresAt { get; set; }
+    public PhoneNumber PhoneNumber { get; private set; }
 
-    public OtpSessionStatus Status { get; set; }
+    public string OtpHash { get; private set; }
 
-    public DateTime? VerifiedAt { get; set; }
+    public DateTime ExpiresAt { get; private set; }
+
+    public OtpSessionStatus Status { get; private set; }
+
+    public DateTime? VerifiedAt { get; private set; }
+
+    public Guid DeviceId { get; private set; }
+
+    public static PhoneVerificationSession Create(
+        PhoneNumber phoneNumber,
+        string otpHash,
+        DateTime expiresAt,
+        Guid deviceId
+    )
+    {
+        return new PhoneVerificationSession(phoneNumber, otpHash, expiresAt, OtpSessionStatus.Pending, deviceId);
+    }
+
+
+
 }

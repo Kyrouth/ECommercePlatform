@@ -9,6 +9,7 @@ public class ApplicationDbContext : DbContext
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
     public DbSet<User> Users => Set<User>();
+    public DbSet<UserDevice> UsersDevices => Set<UserDevice>();
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

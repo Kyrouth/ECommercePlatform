@@ -49,5 +49,11 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<User>
             phoneNumber.HasIndex(x => x.Value)
                 .IsUnique();
         });
+
+        builder.HasOne<Role>()
+            .WithMany()
+            .HasForeignKey(x => x.RoleId)
+            .OnDelete(DeleteBehavior.Restrict);
+
     }
 }
