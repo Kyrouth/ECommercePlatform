@@ -25,12 +25,12 @@ public sealed class PhoneNumber : ValueObject
 
         if(phoneNumber.Length != CharacterLength)
         {
-            return UserErrors.PhoneNumber.CharacterLengthError;
+            return PhoneNumberErrors.CharacterLengthError;
         }
 
         if (!Regex.IsMatch(phoneNumber, Pattern))
         {
-            return UserErrors.PhoneNumber.ComplexityError;
+            return PhoneNumberErrors.ComplexityError;
         }
 
         return new PhoneNumber(phoneNumber);
