@@ -5,6 +5,7 @@ using Application.Common.Interfaces.Messaging;
 using Application.Common.Interfaces.Repositories;
 using Application.Common.Messaging;
 using Application.Common.Utilities;
+using Application.Users.Common;
 using Application.Users.SendOtp;
 using Domain.Common;
 
@@ -25,14 +26,14 @@ public sealed class ResendOtpUserCommandHandler(
 
         if (deviceId is null || deviceId.Value == Guid.Empty)
         {
-            return ResendOtpUserErrors.ClientNotFoundError;
+            return CommonUserErrors.ClientNotFoundError;
         }
 
         var phoneVerificationSession = await phoneVerificationSessionRepository
             .GetPendingSessionByDeviceIdAsync(deviceId.Value, cancellationToken);
 
         if (phoneVerificationSession is null)
-            return ResendOtpUserErrors.SessionNotFoundError;
+            return CommonUserErrors.PendingSessionNotFoundError;
 
 
         var otp = OtpGenerator.Generate();

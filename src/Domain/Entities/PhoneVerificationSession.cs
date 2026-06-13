@@ -98,7 +98,7 @@ public sealed class PhoneVerificationSession : BaseEntity
 
     }
 
-    public Result Verify(string otpHash, DateTime now)
+    public Result<DateTime> Verify(string otpHash, DateTime now)
     {
         if (Status != OtpSessionStatus.Pending || VerifiedAt is not null)
             return PhoneVerificationSessionErrors.IncorrectSessionStatusToRefreshError;
@@ -112,9 +112,10 @@ public sealed class PhoneVerificationSession : BaseEntity
 
         Status = OtpSessionStatus.Verified;
         VerifiedAt = now;
+        ExpiresAt = now.AddMinutes(10);
 
 
-        return Result.Success();
+        return Result.Success(ExpiresAt);
     }
 
 

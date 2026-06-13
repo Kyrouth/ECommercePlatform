@@ -1,16 +1,15 @@
-using Application.Users.SendOtp;
-using Domain.Common;
+using Application.Users.VerifyOtp;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Endpoints.Users;
 
-public sealed class SendOtp : AEndpoint
+public sealed class VerifyOtp : AEndpoint
 {
-    public sealed record Request(Guid ClientId, string PhoneNumber);
+    public sealed record Request(Guid ClientId, string Otp);
     public override void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("api/users/send-otp", async (
+        app.MapPost("api/users/verify-otp", async (
             [FromBody] Request request,
             HttpContext http,
             [FromServices] ISender sender,
@@ -24,11 +23,8 @@ public sealed class SendOtp : AEndpoint
                 return Results.Forbid();
             }
 
-            var userAgent = http?.Request.Headers.UserAgent.ToString();
 
-            var ipAddress = http?.Connection.RemoteIpAddress?.ToString();
-
-            var command = new SendOtpUserCommand(request.ClientId, request.PhoneNumber, userAgent, ipAddress);
+            var command = new VerifyOtpUserCommand(request.ClientId, request.Otp);
 
             var result = await sender.Send(command, cancellationToken);
 
@@ -37,7 +33,7 @@ public sealed class SendOtp : AEndpoint
                 return HandleFailure(result);
             }
 
-            return Results.Ok();
+            return Results.Ok(result.Value);
         })
         .WithTags(Tags.Users); //TODO Documenting
     }
