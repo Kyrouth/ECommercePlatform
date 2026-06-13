@@ -9,7 +9,7 @@ using WebApi.Extensions;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddApplication()
-    .AddInfrastructure(builder.Configuration);
+    .AddInfrastructure(builder.Configuration, builder.Environment.IsDevelopment());
 
 builder.Host.UseSerilog((context, configuration) =>
 {

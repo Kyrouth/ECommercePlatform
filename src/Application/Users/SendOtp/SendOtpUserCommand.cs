@@ -4,10 +4,9 @@ namespace Application.Users.SendOtp;
 
 
 public sealed record SendOtpUserCommand(
-    Guid DeviceId,
+    Guid ClientId,
     string PhoneNumber,
-    string? DeviceName = null,
     string? UserAgent = null,
     string? IpAddress = null
 
-) : ICommand<SendOtpUserResponse>;
+) : ICommand;

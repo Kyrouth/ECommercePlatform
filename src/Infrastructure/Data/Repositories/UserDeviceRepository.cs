@@ -5,8 +5,11 @@ namespace Infrastructure.Data.Repositories;
 
 public sealed class UserDeviceRepository(ApplicationDbContext dbContext) : IUserDeviceRepository
 {
-    public async Task<bool> DeviceExistsAsync(Guid deviceId, CancellationToken cancellationToken)
+    public async Task<Guid?> GetIdByClientIdAsync(Guid clientId, CancellationToken cancellationToken)
     {
-        return await dbContext.UsersDevices.AnyAsync(ud => ud.DeviceId == deviceId, cancellationToken);
-    } 
+        return await dbContext.UsersDevices
+            .Where(ud => ud.ClientId == clientId)
+            .Select(ud => (Guid?)ud.Id)
+            .FirstOrDefaultAsync(cancellationToken);
+    }
 }

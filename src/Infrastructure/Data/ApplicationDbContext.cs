@@ -10,6 +10,7 @@ public class ApplicationDbContext : DbContext
 
     public DbSet<User> Users => Set<User>();
     public DbSet<UserDevice> UsersDevices => Set<UserDevice>();
+    public DbSet<PhoneVerificationSession> phoneVerificationSessions => Set<PhoneVerificationSession>();
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

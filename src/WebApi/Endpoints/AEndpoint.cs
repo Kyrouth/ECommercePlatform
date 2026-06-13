@@ -18,6 +18,16 @@ public abstract class AEndpoint
                 result.Error,
                 validationResult.Errors
             )),
+            { Error.Type: ErrorType.NotFound } => Results.NotFound(CreateProblemDetails(
+                "Not Found",
+                StatusCodes.Status404NotFound,
+                result.Error
+            )),
+            { Error.Type: ErrorType.Conflict } => Results.Conflict(CreateProblemDetails(
+                "Conflict",
+                StatusCodes.Status409Conflict,
+                result.Error
+            )),
             _ => Results.BadRequest(CreateProblemDetails(
                 "Bad Request",
                 StatusCodes.Status400BadRequest,

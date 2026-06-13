@@ -7,34 +7,32 @@ public sealed class UserDevice : BaseEntity
     private UserDevice() {}
 
     private UserDevice(
-        Guid deviceId,
+        Guid id,
+        Guid clientId,
         Guid? userId,
-        string? deviceName,
         string? userAgent,
         string? ipAddress
     )
     {
-        DeviceId = deviceId;
-        DeviceName = deviceName;
+        Id = id;
+        ClientId = clientId;
         UserAgent = userAgent;
         IpAddress = ipAddress;
         UserId = userId;
     }
 
-    public Guid DeviceId { get; private set; }
+    public Guid ClientId { get; private set; }
     public Guid? UserId { get; private set; }
-    public string? DeviceName { get; private set; }
     public string? UserAgent { get; private set; }
     public string? IpAddress { get; private set; }
 
     public static UserDevice Create(
-        Guid deviceId,
+        Guid clientId,
         Guid? userId = null,
-        string? deviceName = null,
         string? userAgent = null,
         string? ipAddress = null
     )
     {
-        return new UserDevice(deviceId, userId, deviceName, userAgent, ipAddress);
+        return new UserDevice(Guid.NewGuid(), clientId, userId, userAgent, ipAddress);
     }
 }

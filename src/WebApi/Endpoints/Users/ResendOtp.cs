@@ -1,34 +1,29 @@
+using Application.Users.ResendOtp;
 using Application.Users.SendOtp;
-using Domain.Common;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Endpoints.Users;
 
-public sealed class SendOtp : AEndpoint
+public sealed class ResendOtp : AEndpoint
 {
-    public sealed record Request(Guid ClientId, string PhoneNumber);
+    public sealed record Request(Guid ClientId);
     public override void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("api/users/send-otp", async (
+        app.MapPost("api/users/resend-otp", async (
             [FromBody] Request request,
             HttpContext http,
             [FromServices] ISender sender,
             CancellationToken cancellationToken
         ) =>
         {
-
             // Check that the user is auth or not
             if(http?.User?.Identity?.IsAuthenticated ?? false)
             {
                 return Results.Forbid();
             }
 
-            var userAgent = http.Request.Headers.UserAgent.ToString();
-
-            var ipAddress = http.Connection.RemoteIpAddress?.ToString();
-
-            var command = new SendOtpUserCommand(request.ClientId, request.PhoneNumber, userAgent, ipAddress);
+            var command = new ResendOtpUserCommand(request.ClientId);
 
             var result = await sender.Send(command, cancellationToken);
 

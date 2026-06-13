@@ -8,7 +8,7 @@ public sealed class SendOtpUserCommandValidator : AbstractValidator<SendOtpUserC
 {
     public SendOtpUserCommandValidator()
     {
-        RuleFor(c => c.DeviceId)
+        RuleFor(c => c.ClientId)
             .NotEmpty();
 
         RuleFor(c => c.PhoneNumber)

@@ -2,5 +2,5 @@ namespace Application.Common.Interfaces.Repositories;
 
 public interface IUserDeviceRepository
 {
-    Task<bool> DeviceExistsAsync(Guid deviceId, CancellationToken cancellationToken);
+    Task<Guid?> GetIdByClientIdAsync(Guid clientId, CancellationToken cancellationToken);
 }
