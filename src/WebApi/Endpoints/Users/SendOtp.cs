@@ -19,7 +19,7 @@ public sealed class SendOtp : AEndpoint
         {
 
             // Check that the user is auth or not
-            if(http?.User?.Identity?.IsAuthenticated ?? false)
+            if (http?.User?.Identity?.IsAuthenticated ?? false)
             {
                 return Results.Forbid();
             }
@@ -39,6 +39,10 @@ public sealed class SendOtp : AEndpoint
 
             return Results.Ok();
         })
-        .WithTags(Tags.Users); //TODO Documenting
+        .AllowAnonymous()
+        .WithTags(Tags.Users, Tags.Authentication)
+        .WithName("SendOtpUser")
+        .WithSummary("Send OTP for authentication")
+        .WithDescription("Sends a one-time password (OTP) to the provided phone number for authentication or registration flow.");
     }
 }

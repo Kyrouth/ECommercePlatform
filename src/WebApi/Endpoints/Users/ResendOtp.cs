@@ -34,6 +34,10 @@ public sealed class ResendOtp : AEndpoint
 
             return Results.Ok();
         })
-        .WithTags(Tags.Users); //TODO Documenting
+        .AllowAnonymous()
+        .WithTags(Tags.Users, Tags.Authentication)
+        .WithName("ResendOtp")
+        .WithSummary("Resend OTP code")
+        .WithDescription("Resend a new one-time password (OTP) if the previous one has expired or is no longer valid.");
     }
 }

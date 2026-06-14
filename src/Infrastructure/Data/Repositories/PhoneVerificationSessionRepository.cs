@@ -31,7 +31,7 @@ public sealed class PhoneVerificationSessionRepository(ApplicationDbContext dbCo
     {
         return await dbContext.phoneVerificationSessions
             .AnyAsync(pvs =>
-                pvs.PhoneNumber == phoneNumber &&
+                pvs.PhoneNumber.Value == phoneNumber.Value &&
                 pvs.Status == OtpSessionStatus.Pending &&
                 pvs.ExpiresAt > clockProvider.UtcNow,
                 cancellationToken

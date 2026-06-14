@@ -35,6 +35,10 @@ public sealed class VerifyOtp : AEndpoint
 
             return Results.Ok(result.Value);
         })
-        .WithTags(Tags.Users); //TODO Documenting
+        .AllowAnonymous()
+        .WithTags(Tags.Users, Tags.Authentication)
+        .WithName("VerifyOtpUser")
+        .WithSummary("Verify OTP for authentication")
+        .WithDescription("Verifies the OTP sent to the user's phone number and returns a verification result used for authentication flow.");
     }
 }
