@@ -8,6 +8,7 @@ using Application.Common.Utilities;
 using Application.Users.Common;
 using Application.Users.SendOtp;
 using Domain.Common;
+using Domain.Errors;
 
 namespace Application.Users.ResendOtp;
 
@@ -42,12 +43,10 @@ public sealed class ResendOtpUserCommandHandler(
 
         var result = phoneVerificationSession.Refresh(otpHash, clockProvider.UtcNow);
 
-        if(result.IsFailure)
-        {
-            return result.Error;
-        }
-
         await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        if(result.IsFailure)
+            return result.Error;
 
         await messageSender.SendAsync($"Your OTP code is {otp}");
 

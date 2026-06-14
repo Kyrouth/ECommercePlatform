@@ -14,6 +14,12 @@ public sealed class PhoneVerificationSessionRepository(ApplicationDbContext dbCo
         await dbContext.phoneVerificationSessions.AddAsync(instance, cancellationToken);
     }
 
+    public async Task<bool> AnyPendingSessionByDeviceIdAsync(Guid deviceId, CancellationToken cancellationToken)
+    {
+        return await dbContext.phoneVerificationSessions
+            .AnyAsync(pvs => pvs.DeviceId == deviceId && pvs.Status == OtpSessionStatus.Pending, cancellationToken);
+    }
+
     public async Task<PhoneVerificationSession?> GetPendingSessionByDeviceIdAsync(Guid deviceId, CancellationToken cancellationToken)
     {
         return await dbContext.phoneVerificationSessions

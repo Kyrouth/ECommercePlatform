@@ -1,22 +1,23 @@
 using Application.Common;
+using Application.Common.Interfaces;
 using Application.Common.Interfaces.Authentication;
 using Application.Common.Interfaces.Repositories;
 using Application.Common.Messaging;
 using Application.Users.Common;
-using Application.Users.VerifyOtp;
 using Domain.Common;
 using MediatR;
 
-namespace Application.Users.SendOtp;
+namespace Application.Users.VerifyOtp;
 
 public sealed class VerifyOtpUserCommandHandler(
     IUserDeviceRepository userDeviceRepository,
     IPhoneVerificationSessionRepository phoneVerificationSessionRepository,
     IOtpHasher otpHasher,
-    IClockProvider clockProvider
+    IClockProvider clockProvider,
+    IUnitOfWork unitOfWork
 ) : ICommandHandler<VerifyOtpUserCommand, VerifyOtpUserCommandResponse>
 {
-    async Task<Result<VerifyOtpUserCommandResponse>> IRequestHandler<VerifyOtpUserCommand, Result<VerifyOtpUserCommandResponse>>.Handle(VerifyOtpUserCommand request, CancellationToken cancellationToken)
+    public async Task<Result<VerifyOtpUserCommandResponse>> Handle(VerifyOtpUserCommand request, CancellationToken cancellationToken)
     {
         var deviceId = await userDeviceRepository.GetIdByClientIdAsync(request.ClientId, cancellationToken);
 
@@ -39,6 +40,8 @@ public sealed class VerifyOtpUserCommandHandler(
 
         var response = new VerifyOtpUserCommandResponse(phoneVerificationSession.Id, result.Value);
         
+        await unitOfWork.SaveChangesAsync(cancellationToken);
+
         return Result.Success(response);
     }
 }

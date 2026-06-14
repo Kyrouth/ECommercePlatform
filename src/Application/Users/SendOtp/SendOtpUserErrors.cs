@@ -6,7 +6,7 @@ public static class SendOtpUserErrors
 {
     public const string Prefix = "SendOtpUserErrors";
     
-    public static readonly Error DeviceAlreadyExists = Error.Conflict($"{Prefix}.{nameof(DeviceAlreadyExists)}", "The client id already exists.");
-    public static readonly Error CodeAlreadySent = Error.Conflict($"{Prefix}.{nameof(CodeAlreadySent)}", "There is a pending OTP session for this phone number.");
+    public static readonly Error CodeAlreadySentError = Error.Conflict($"{Prefix}.{nameof(CodeAlreadySentError)}", "There is a pending OTP session for this phone number.");
+    public static readonly Error SessionAlreadyExistsForClientError = Error.Conflict($"{Prefix}.{nameof(SessionAlreadyExistsForClientError)}", "There is a pending OTP session for this client.");
 
 }

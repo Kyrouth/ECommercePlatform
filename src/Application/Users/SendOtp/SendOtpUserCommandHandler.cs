@@ -23,34 +23,52 @@ public sealed class SendOtpUserCommandHandler(
 
     public async Task<Result> Handle(SendOtpUserCommand request, CancellationToken cancellationToken)
     {
-        var deviceExists = await userDeviceRepository.GetIdByClientIdAsync(request.ClientId, cancellationToken);
-
-        if (deviceExists is not null && deviceExists.Value != Guid.Empty)
-        {
-            return SendOtpUserErrors.DeviceAlreadyExists;
-        }
 
         var phoneNumber = PhoneNumber.Create(request.PhoneNumber);
 
         if (phoneNumber.IsFailure)
             return phoneNumber.Error;
 
+
         var isAPendingSessionExistsForThisPhoneNumber = await phoneVerificationSessionRepository.PendingOtpSessionExistsAsync(phoneNumber.Value, cancellationToken);
 
-        if(isAPendingSessionExistsForThisPhoneNumber)
-            return SendOtpUserErrors.CodeAlreadySent;
+        if (isAPendingSessionExistsForThisPhoneNumber)
+            return SendOtpUserErrors.CodeAlreadySentError;
 
-        var device = UserDevice.Create(
-            clientId: request.ClientId,
-            userAgent: request.UserAgent,
-            ipAddress: request.IpAddress
-        );
+
+        var existsDevice = await userDeviceRepository.GetIdByClientIdAsync(request.ClientId, cancellationToken);
 
         var otp = OtpGenerator.Generate();
+        string otpHash;
+        Guid deviceId;
 
-        var otpHash = otpHasher.Hash(otp, device.ClientId);
+        if (existsDevice is not null && existsDevice.Value != Guid.Empty)
+        {
+            var anyPendingSession = await phoneVerificationSessionRepository
+                .AnyPendingSessionByDeviceIdAsync(existsDevice.Value, cancellationToken);
 
-        var otpSession = PhoneVerificationSession.Create(phoneNumber.Value, otpHash, clock.UtcNow, device.Id);
+            if (anyPendingSession)
+                return SendOtpUserErrors.SessionAlreadyExistsForClientError;
+            
+            otpHash = otpHasher.Hash(otp, request.ClientId);
+            deviceId = existsDevice.Value;
+        }
+        else
+        {
+            var device = UserDevice.Create(
+                clientId: request.ClientId,
+                userAgent: request.UserAgent,
+                ipAddress: request.IpAddress
+            );
+
+            await userDeviceRepository.AddAsync(device, cancellationToken);
+
+            otpHash = otpHasher.Hash(otp, device.ClientId);
+            deviceId = device.Id;
+        }
+
+
+        var otpSession = PhoneVerificationSession.Create(phoneNumber.Value, otpHash, clock.UtcNow, deviceId);
 
         await phoneVerificationSessionRepository.AddAsync(otpSession, cancellationToken);
 

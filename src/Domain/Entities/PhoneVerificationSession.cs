@@ -103,7 +103,7 @@ public sealed class PhoneVerificationSession : BaseEntity
         if (Status != OtpSessionStatus.Pending || VerifiedAt is not null)
             return PhoneVerificationSessionErrors.IncorrectSessionStatusToRefreshError;
 
-        if(OtpExpiresAt > now)
+        if(OtpExpiresAt <= now)
             return PhoneVerificationSessionErrors.OtpExpiredError;
         
         if(otpHash != OtpHash)

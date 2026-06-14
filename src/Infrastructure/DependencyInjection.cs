@@ -15,7 +15,7 @@ namespace Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration, bool isDevelopment)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<ApplicationDbContext>(options =>
         {
@@ -24,6 +24,7 @@ public static class DependencyInjection
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IUserDeviceRepository, UserDeviceRepository>();
+        services.AddScoped<IPhoneVerificationSessionRepository, PhoneVerificationSessionRepository>();
 
         var secret = configuration["Otp:Secret"];
 
@@ -32,14 +33,8 @@ public static class DependencyInjection
 
         services.AddSingleton<IOtpHasher>(new HmacOtpHasher(secret));
 
-        if (isDevelopment)
-        {
-            services.AddSingleton<IMessageSender, ConsoleSmsSender>();
-        }
-        else
-        {
-            throw new NotImplementedException();
-        }
+        services.AddSingleton<IMessageSender, ConsoleSmsSender>();
+
 
         services.AddSingleton<IClockProvider, SystemClock>();
 

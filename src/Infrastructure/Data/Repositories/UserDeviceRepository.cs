@@ -1,10 +1,16 @@
 using Application.Common.Interfaces.Repositories;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data.Repositories;
 
 public sealed class UserDeviceRepository(ApplicationDbContext dbContext) : IUserDeviceRepository
 {
+    public async Task AddAsync(UserDevice userDevice, CancellationToken cancellationToken)
+    {
+        await dbContext.UsersDevices.AddAsync(userDevice, cancellationToken);
+    }
+
     public async Task<Guid?> GetIdByClientIdAsync(Guid clientId, CancellationToken cancellationToken)
     {
         return await dbContext.UsersDevices
