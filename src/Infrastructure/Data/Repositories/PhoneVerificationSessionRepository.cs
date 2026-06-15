@@ -27,13 +27,15 @@ public sealed class PhoneVerificationSessionRepository(ApplicationDbContext dbCo
             .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<bool> PendingOtpSessionExistsAsync(PhoneNumber phoneNumber, CancellationToken cancellationToken)
+    public async Task<bool> ActiveOtpSessionExistsAsync(PhoneNumber phoneNumber, CancellationToken cancellationToken)
     {
         return await dbContext.phoneVerificationSessions
             .AnyAsync(pvs =>
                 pvs.PhoneNumber.Value == phoneNumber.Value &&
-                pvs.Status == OtpSessionStatus.Pending &&
-                pvs.ExpiresAt > clockProvider.UtcNow,
+                (
+                    (pvs.Status == OtpSessionStatus.Pending && pvs.ExpiresAt > clockProvider.UtcNow) ||
+                    (pvs.Status == OtpSessionStatus.Verified && pvs.ExpiresAt > clockProvider.UtcNow)
+                ),
                 cancellationToken
             );
     }

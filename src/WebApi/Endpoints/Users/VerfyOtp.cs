@@ -6,11 +6,11 @@ namespace WebApi.Endpoints.Users;
 
 public sealed class VerifyOtp : AEndpoint
 {
-    public sealed record Request(Guid ClientId, string Otp);
+    public sealed record VerifyOtpUserRequest(Guid ClientId, string Otp);
     public override void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapPost("api/users/verify-otp", async (
-            [FromBody] Request request,
+            [FromBody] VerifyOtpUserRequest request,
             HttpContext http,
             [FromServices] ISender sender,
             CancellationToken cancellationToken

@@ -1,5 +1,4 @@
 using Application.Users.SendOtp;
-using Domain.Common;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,11 +6,11 @@ namespace WebApi.Endpoints.Users;
 
 public sealed class SendOtp : AEndpoint
 {
-    public sealed record Request(Guid ClientId, string PhoneNumber);
+    public sealed record SendOtpUserRequest(Guid ClientId, string PhoneNumber);
     public override void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapPost("api/users/send-otp", async (
-            [FromBody] Request request,
+            [FromBody] SendOtpUserRequest request,
             HttpContext http,
             [FromServices] ISender sender,
             CancellationToken cancellationToken

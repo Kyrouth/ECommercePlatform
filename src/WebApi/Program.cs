@@ -44,6 +44,8 @@ app.UseHttpsRedirection();
 // app.UseAuthorization();
 app.UseExceptionHandler();
 
+app.MapGet("test", () => Results.Ok("Test"));
+
 app.MapEndpoints();
 
 app.Run();

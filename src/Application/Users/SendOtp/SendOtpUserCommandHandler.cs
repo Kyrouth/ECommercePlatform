@@ -30,10 +30,10 @@ public sealed class SendOtpUserCommandHandler(
             return phoneNumber.Error;
 
 
-        var isAPendingSessionExistsForThisPhoneNumber = await phoneVerificationSessionRepository.PendingOtpSessionExistsAsync(phoneNumber.Value, cancellationToken);
+        var isAPendingSessionExistsForThisPhoneNumber = await phoneVerificationSessionRepository.ActiveOtpSessionExistsAsync(phoneNumber.Value, cancellationToken);
 
         if (isAPendingSessionExistsForThisPhoneNumber)
-            return SendOtpUserErrors.CodeAlreadySentError;
+            return SendOtpUserErrors.ActiveSessionExistsError;
 
 
         var existsDevice = await userDeviceRepository.GetIdByClientIdAsync(request.ClientId, cancellationToken);

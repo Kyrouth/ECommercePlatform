@@ -1,5 +1,4 @@
 using Application.Users.ResendOtp;
-using Application.Users.SendOtp;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,11 +6,11 @@ namespace WebApi.Endpoints.Users;
 
 public sealed class ResendOtp : AEndpoint
 {
-    public sealed record Request(Guid ClientId);
+    public sealed record ResendOtpUserRequest(Guid ClientId);
     public override void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapPost("api/users/resend-otp", async (
-            [FromBody] Request request,
+            [FromBody] ResendOtpUserRequest request,
             HttpContext http,
             [FromServices] ISender sender,
             CancellationToken cancellationToken
