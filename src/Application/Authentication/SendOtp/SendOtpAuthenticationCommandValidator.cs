@@ -2,11 +2,11 @@ using Domain.Errors;
 using Domain.ValueObjects;
 using FluentValidation;
 
-namespace Application.Users.SendOtp;
+namespace Application.Authentication.SendOtp;
 
-public sealed class SendOtpUserCommandValidator : AbstractValidator<SendOtpUserCommand>
+public sealed class SendOtpAuthenticationCommandValidator : AbstractValidator<SendOtpAuthenticationCommand>
 {
-    public SendOtpUserCommandValidator()
+    public SendOtpAuthenticationCommandValidator()
     {
         RuleFor(c => c.ClientId)
             .NotEmpty();

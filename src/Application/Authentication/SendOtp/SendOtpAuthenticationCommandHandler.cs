@@ -9,19 +9,19 @@ using Domain.Common;
 using Domain.Entities;
 using Domain.ValueObjects;
 
-namespace Application.Users.SendOtp;
+namespace Application.Authentication.SendOtp;
 
-public sealed class SendOtpUserCommandHandler(
+public sealed class SendOtpAuthenticationCommandHandler(
     IUserDeviceRepository userDeviceRepository,
     IPhoneVerificationSessionRepository phoneVerificationSessionRepository,
     IUnitOfWork unitOfWork,
     IOtpHasher otpHasher,
     IClockProvider clock,
     IMessageSender messageSender
-) : ICommandHandler<SendOtpUserCommand>
+) : ICommandHandler<SendOtpAuthenticationCommand>
 {
 
-    public async Task<Result> Handle(SendOtpUserCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(SendOtpAuthenticationCommand request, CancellationToken cancellationToken)
     {
 
         var phoneNumber = PhoneNumber.Create(request.PhoneNumber);
@@ -33,7 +33,7 @@ public sealed class SendOtpUserCommandHandler(
         var isAPendingSessionExistsForThisPhoneNumber = await phoneVerificationSessionRepository.ActiveOtpSessionExistsAsync(phoneNumber.Value, cancellationToken);
 
         if (isAPendingSessionExistsForThisPhoneNumber)
-            return SendOtpUserErrors.ActiveSessionExistsError;
+            return SendOtpAuthenticationErrors.ActiveSessionExistsError;
 
 
         var existsDevice = await userDeviceRepository.GetIdByClientIdAsync(request.ClientId, cancellationToken);
@@ -48,7 +48,7 @@ public sealed class SendOtpUserCommandHandler(
                 .AnyPendingSessionByDeviceIdAsync(existsDevice.Value, cancellationToken);
 
             if (anyPendingSession)
-                return SendOtpUserErrors.SessionAlreadyExistsForClientError;
+                return SendOtpAuthenticationErrors.SessionAlreadyExistsForClientError;
             
             otpHash = otpHasher.Hash(otp, request.ClientId);
             deviceId = existsDevice.Value;

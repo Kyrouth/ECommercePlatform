@@ -1,9 +1,9 @@
 using Application.Common.Messaging;
 
-namespace Application.Users.SendOtp;
+namespace Application.Authentication.SendOtp;
 
 
-public sealed record SendOtpUserCommand(
+public sealed record SendOtpAuthenticationCommand(
     Guid ClientId,
     string PhoneNumber,
     string? UserAgent = null,

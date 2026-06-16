@@ -1,16 +1,16 @@
-using Application.Users.SendOtp;
+using Application.Authentication.SendOtp;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace WebApi.Endpoints.Users;
+namespace WebApi.Endpoints.Authentication;
 
 public sealed class SendOtp : AEndpoint
 {
-    public sealed record SendOtpUserRequest(Guid ClientId, string PhoneNumber);
+    public sealed record SendOtpAuthenticationRequest(Guid ClientId, string PhoneNumber);
     public override void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("api/users/send-otp", async (
-            [FromBody] SendOtpUserRequest request,
+        app.MapPost("api/authentication/send-otp", async (
+            [FromBody] SendOtpAuthenticationRequest request,
             HttpContext http,
             [FromServices] ISender sender,
             CancellationToken cancellationToken
@@ -27,7 +27,7 @@ public sealed class SendOtp : AEndpoint
 
             var ipAddress = http?.Connection.RemoteIpAddress?.ToString();
 
-            var command = new SendOtpUserCommand(request.ClientId, request.PhoneNumber, userAgent, ipAddress);
+            var command = new SendOtpAuthenticationCommand(request.ClientId, request.PhoneNumber, userAgent, ipAddress);
 
             var result = await sender.Send(command, cancellationToken);
 
@@ -39,7 +39,7 @@ public sealed class SendOtp : AEndpoint
             return Results.Ok();
         })
         .AllowAnonymous()
-        .WithTags(Tags.Users, Tags.Authentication)
+        .WithTags(Tags.Authentication)
         .WithName("SendOtpUser")
         .WithSummary("Send OTP for authentication")
         .WithDescription("Sends a one-time password (OTP) to the provided phone number for authentication or registration flow.");

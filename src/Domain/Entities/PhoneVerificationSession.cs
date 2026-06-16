@@ -65,7 +65,7 @@ public sealed class PhoneVerificationSession : BaseEntity
         {
             var result = Expire(now);
             if(result.IsFailure)
-                return PhoneVerificationSessionErrors.FailedExpireProcessError;
+                return result.Error;
             return PhoneVerificationSessionErrors.ExpiredSessionError;
         }
 

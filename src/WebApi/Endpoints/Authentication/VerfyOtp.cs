@@ -1,16 +1,16 @@
-using Application.Users.VerifyOtp;
+using Application.Authentication.VerifyOtp;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace WebApi.Endpoints.Users;
+namespace WebApi.Endpoints.Authentication;
 
 public sealed class VerifyOtp : AEndpoint
 {
-    public sealed record VerifyOtpUserRequest(Guid ClientId, string Otp);
+    public sealed record VerifyOtpAuthenticationRequest(Guid ClientId, string Otp);
     public override void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("api/users/verify-otp", async (
-            [FromBody] VerifyOtpUserRequest request,
+        app.MapPost("api/authentication/verify-otp", async (
+            [FromBody] VerifyOtpAuthenticationRequest request,
             HttpContext http,
             [FromServices] ISender sender,
             CancellationToken cancellationToken
@@ -24,7 +24,7 @@ public sealed class VerifyOtp : AEndpoint
             }
 
 
-            var command = new VerifyOtpUserCommand(request.ClientId, request.Otp);
+            var command = new VerifyOtpAuthenticationCommand(request.ClientId, request.Otp);
 
             var result = await sender.Send(command, cancellationToken);
 
@@ -36,7 +36,7 @@ public sealed class VerifyOtp : AEndpoint
             return Results.Ok(result.Value);
         })
         .AllowAnonymous()
-        .WithTags(Tags.Users, Tags.Authentication)
+        .WithTags(Tags.Authentication)
         .WithName("VerifyOtpUser")
         .WithSummary("Verify OTP for authentication")
         .WithDescription("Verifies the OTP sent to the user's phone number and returns a verification result used for authentication flow.");

@@ -1,10 +1,10 @@
 using Domain.Common;
 
-namespace Application.Users.Common;
+namespace Application.Authentication.Common;
 
-public static class CommonUserErrors
+public static class CommonAuthenticationErrors
 {
-    public const string Prefix = "CommonUserErrors";
+    public const string Prefix = "CommonAuthenticationErrors";
     public static readonly Error ClientNotFoundError = Error.NotFound($"{Prefix}.{nameof(ClientNotFoundError)}", "The client is not exists.");
     public static readonly Error PendingSessionNotFoundError = Error.NotFound($"{Prefix}.{nameof(PendingSessionNotFoundError)}", "There is not any pending session for this client.");
 }
