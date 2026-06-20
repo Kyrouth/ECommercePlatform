@@ -27,12 +27,18 @@ public sealed class UserDevice : BaseEntity
     public string? IpAddress { get; private set; }
 
     public static UserDevice Create(
+        Guid id,
         Guid clientId,
         Guid? userId = null,
         string? userAgent = null,
         string? ipAddress = null
     )
     {
-        return new UserDevice(Guid.NewGuid(), clientId, userId, userAgent, ipAddress);
+        return new UserDevice(id, clientId, userId, userAgent, ipAddress);
+    }
+
+    public void SetUser(Guid userId)
+    {
+        UserId = userId;
     }
 }

@@ -55,5 +55,17 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<User>
             .HasForeignKey(x => x.RoleId)
             .OnDelete(DeleteBehavior.Restrict);
 
+        builder.HasMany<RefreshToken>()
+            .WithOne()
+            .HasForeignKey(x => x.UserId);
+
+        builder.HasMany<UserDevice>()
+            .WithOne()
+            .HasForeignKey(x => x.UserId);
+
+        builder.HasOne<Role>()
+            .WithMany()
+            .HasForeignKey(u => u.RoleId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

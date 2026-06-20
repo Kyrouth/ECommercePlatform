@@ -1,3 +1,4 @@
+using Application.Authentication.Common;
 using Application.Common;
 using Application.Common.Interfaces;
 using Application.Common.Interfaces.Authentication;
@@ -17,7 +18,8 @@ public sealed class SendOtpAuthenticationCommandHandler(
     IUnitOfWork unitOfWork,
     IOtpHasher otpHasher,
     IClockProvider clock,
-    IMessageSender messageSender
+    IMessageSender messageSender,
+    IUserRepository userRepository
 ) : ICommandHandler<SendOtpAuthenticationCommand>
 {
 
@@ -34,7 +36,11 @@ public sealed class SendOtpAuthenticationCommandHandler(
 
         if (isAPendingSessionExistsForThisPhoneNumber)
             return SendOtpAuthenticationErrors.ActiveSessionExistsError;
+        
+        var notActiveUserExistsByPhoneNumber = await userRepository.NotActiveUserExistsByPhoneNumberAsync(phoneNumber.Value, cancellationToken);
 
+        if(notActiveUserExistsByPhoneNumber)
+            return CommonAuthenticationErrors.UnablePhoneNumberError;
 
         var existsDevice = await userDeviceRepository.GetIdByClientIdAsync(request.ClientId, cancellationToken);
 
@@ -50,25 +56,26 @@ public sealed class SendOtpAuthenticationCommandHandler(
             if (anyPendingSession)
                 return SendOtpAuthenticationErrors.SessionAlreadyExistsForClientError;
             
-            otpHash = otpHasher.Hash(otp, request.ClientId);
+            otpHash = otpHasher.HashOtp(otp, request.ClientId);
             deviceId = existsDevice.Value;
         }
         else
         {
             var device = UserDevice.Create(
-                clientId: request.ClientId,
+                Guid.NewGuid(),
+                request.ClientId,
                 userAgent: request.UserAgent,
                 ipAddress: request.IpAddress
             );
 
             await userDeviceRepository.AddAsync(device, cancellationToken);
 
-            otpHash = otpHasher.Hash(otp, device.ClientId);
+            otpHash = otpHasher.HashOtp(otp, device.ClientId);
             deviceId = device.Id;
         }
 
 
-        var otpSession = PhoneVerificationSession.Create(phoneNumber.Value, otpHash, clock.UtcNow, deviceId);
+        var otpSession = PhoneVerificationSession.Create(Guid.NewGuid(), phoneNumber.Value, otpHash, clock.UtcNow, deviceId);
 
         await phoneVerificationSessionRepository.AddAsync(otpSession, cancellationToken);
 

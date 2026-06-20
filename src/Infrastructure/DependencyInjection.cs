@@ -25,6 +25,12 @@ public static class DependencyInjection
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IUserDeviceRepository, UserDeviceRepository>();
         services.AddScoped<IPhoneVerificationSessionRepository, PhoneVerificationSessionRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+
+
+        services.Configure<JwtOptions>(configuration.GetSection("JWTConfig"));
+        services.AddSingleton<ITokenProvider, TokenProvider>();
 
         var secret = configuration["Otp:Secret"];
 

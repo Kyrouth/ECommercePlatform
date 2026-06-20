@@ -47,13 +47,14 @@ public sealed class PhoneVerificationSession : BaseEntity
     public Guid DeviceId { get; private set; }
 
     public static PhoneVerificationSession Create(
+        Guid id,
         PhoneNumber phoneNumber,
         string otpHash,
         DateTime now,
         Guid deviceId
     )
     {
-        return new PhoneVerificationSession(Guid.NewGuid(), phoneNumber, otpHash, now.AddMinutes(10), now.AddMinutes(3), OtpSessionStatus.Pending, deviceId);
+        return new PhoneVerificationSession(id, phoneNumber, otpHash, now.AddMinutes(10), now.AddMinutes(3), OtpSessionStatus.Pending, deviceId);
     }
 
     public Result Refresh(string newOtpHash, DateTime now)
@@ -118,6 +119,17 @@ public sealed class PhoneVerificationSession : BaseEntity
         return Result.Success(ExpiresAt);
     }
 
+
+    public bool IsValidForCreatingUser(DateTime now)
+    {
+        if(
+            Status != OtpSessionStatus.Verified ||
+            ExpiresAt < now
+        )
+            return false;
+        
+        return true;
+    }
 
 
 }

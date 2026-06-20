@@ -38,10 +38,11 @@ public sealed class User : BaseAuditableEntity
     public Username Username { get; private set; }
     public UserState State { get; private set; }
     public Guid RoleId { get; private set; }
-    public PhoneNumber PhoneNumber { get; set; }
+    public PhoneNumber PhoneNumber { get; private set; }
 
 
     public static Result<User> Create(
+        Guid id,
         string firstName,
         string lastName,
         Username username,
@@ -69,7 +70,12 @@ public sealed class User : BaseAuditableEntity
 
 
 
-        return new User(Guid.NewGuid(), firstName, lastName, username, phoneNumber, UserState.Active, roleId);
+        return new User(id, firstName, lastName, username, phoneNumber, UserState.Active, roleId);
+    }
+
+    public bool IsActive()
+    {
+        return State == UserState.Active;
     }
 
 

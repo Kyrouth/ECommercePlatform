@@ -2,9 +2,9 @@ using Domain.Common;
 
 namespace Domain.Errors;
 
-public static partial class PhoneVerificationSessionErrors
+public static class PhoneVerificationSessionErrors
 {
-    public const string Prefix = "PhoneVerificationSessionErrors";
+    public const string Prefix = nameof(PhoneVerificationSessionErrors);
 
     public static readonly Error IncorrectSessionStatusToRefreshError = Error.Conflict($"{Prefix}.{nameof(IncorrectSessionStatusToRefreshError)}", "Cannot refresh a none pending otpSession.");
     public static readonly Error ExpiredSessionError = Error.Conflict($"{Prefix}.{nameof(ExpiredSessionError)}", "Cannot refresh an expired session.");

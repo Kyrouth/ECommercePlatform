@@ -11,6 +11,9 @@ public class ApplicationDbContext : DbContext
     public DbSet<User> Users => Set<User>();
     public DbSet<UserDevice> UsersDevices => Set<UserDevice>();
     public DbSet<PhoneVerificationSession> phoneVerificationSessions => Set<PhoneVerificationSession>();
+    public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+    public DbSet<Role> Roles => Set<Role>();
+    public DbSet<Permission> Permissions => Set<Permission>();
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

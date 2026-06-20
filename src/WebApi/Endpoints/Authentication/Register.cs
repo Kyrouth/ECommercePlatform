@@ -6,11 +6,16 @@ namespace WebApi.Endpoints.Authentication;
 
 public sealed class Register : AEndpoint
 {
-    public sealed record RegisterUserRequest(Guid ClientId, Guid VerificationTokenId);
+    public sealed record RegisterAuthenticationRequest(
+        Guid VerificationTokenId,
+        string FirstName,
+        string LastName,
+        string Username
+    );
     public override void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapPost("api/authentication/register", async (
-            [FromBody] RegisterUserRequest request,
+            [FromBody] RegisterAuthenticationRequest request,
             HttpContext http,
             [FromServices] ISender sender,
             CancellationToken cancellationToken
@@ -22,7 +27,12 @@ public sealed class Register : AEndpoint
                 return Results.Forbid();
             }
 
-            var command = new RegisterUserCommand(request.ClientId, request.VerificationTokenId);
+            var command = new RegisterAuthenticationCommand(
+                request.VerificationTokenId,
+                request.FirstName,
+                request.LastName,
+                request.Username
+            );
 
             var result = await sender.Send(command, cancellationToken);
 
@@ -31,12 +41,12 @@ public sealed class Register : AEndpoint
                 return HandleFailure(result);
             }
 
-            return Results.Ok();
+            return Results.Ok(result.Value);
         })
         .AllowAnonymous()
         .WithTags(Tags.Authentication)
         .WithName("Register")
         .WithSummary("Register user")
-        .WithDescription("Register a new user with verified session");
+        .WithDescription("Register a new user with VerificationTokenId");
     }
 }

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Data.Configurations;
 
-public sealed class UserDeviceConfiguration 
+public sealed class UserDeviceConfiguration
     : IEntityTypeConfiguration<UserDevice>
 {
     public void Configure(EntityTypeBuilder<UserDevice> builder)
@@ -33,5 +33,11 @@ public sealed class UserDeviceConfiguration
 
         builder.Property(x => x.UserId)
             .IsRequired(false);
+
+
+        builder.HasOne<User>()
+            .WithMany()
+            .HasForeignKey(x => x.UserId)
+            .OnDelete(DeleteBehavior.NoAction);
     }
 }

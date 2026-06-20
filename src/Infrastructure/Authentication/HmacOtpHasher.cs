@@ -14,7 +14,7 @@ public sealed class HmacOtpHasher : IOtpHasher
         _secret = secret;
     }
 
-    public string Hash(string otp, Guid clientId)
+    public string HashOtp(string otp, Guid clientId)
     {
         using var hmac = new HMACSHA256(
             Encoding.UTF8.GetBytes(_secret));

@@ -11,6 +11,19 @@ public sealed class UserDeviceRepository(ApplicationDbContext dbContext) : IUser
         await dbContext.UsersDevices.AddAsync(userDevice, cancellationToken);
     }
 
+    public async Task<UserDevice?> GetByClientIdAsync(Guid clientId, CancellationToken cancellationToken)
+    {
+        return await dbContext.UsersDevices
+            .Where(ud => ud.ClientId == clientId)
+            .FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public async Task<UserDevice?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    {
+        return await dbContext.UsersDevices
+            .FirstOrDefaultAsync(ud => ud.Id == id, cancellationToken);
+    }
+
     public async Task<Guid?> GetIdByClientIdAsync(Guid clientId, CancellationToken cancellationToken)
     {
         return await dbContext.UsersDevices

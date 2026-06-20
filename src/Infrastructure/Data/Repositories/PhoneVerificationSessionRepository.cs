@@ -39,4 +39,10 @@ public sealed class PhoneVerificationSessionRepository(ApplicationDbContext dbCo
                 cancellationToken
             );
     }
+
+    public async Task<PhoneVerificationSession?> GetByIdAsync(Guid phoneVerificationId, CancellationToken cancellationToken)
+    {
+        return await dbContext.phoneVerificationSessions
+            .FirstOrDefaultAsync(pvs => pvs.Id == phoneVerificationId, cancellationToken);
+    }
 }

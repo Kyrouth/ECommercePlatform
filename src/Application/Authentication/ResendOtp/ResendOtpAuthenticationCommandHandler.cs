@@ -37,7 +37,7 @@ public sealed class ResendOtpAuthenticationCommandHandler(
 
         var otp = OtpGenerator.Generate();
 
-        var otpHash = otpHasher.Hash(otp, request.ClientId);
+        var otpHash = otpHasher.HashOtp(otp, request.ClientId);
 
         var result = phoneVerificationSession.Refresh(otpHash, clockProvider.UtcNow);
 
